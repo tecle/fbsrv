@@ -1,0 +1,104 @@
+{
+  "ver": 1,
+  "global": {
+    "storage_min": 0,
+    "storage_max": 5000000,
+    "deduct_rate": 0.01,
+    "pumping_out": 0.03
+  },
+  "games": [
+    {
+      "tag": "ZhaJinHua",
+      "title": "欢乐炸金花",
+      "pic": [
+        "testbucket",
+        "8_1481960600853.jpg"
+      ],
+      "multiple": [
+        3,
+        3,
+        3
+      ],
+      "status": [
+        {
+          "status-id": 1,
+          "duration": 8
+        },
+        {
+          "status-id": 2,
+          "duration": 40
+        },
+        {
+          "status-id": 3,
+          "duration": 2
+        },
+        {
+          "status-id": 4,
+          "duration": 10
+        }
+      ]
+    },
+    {
+      "tag": "NiuNiu3",
+      "title": "牛牛三人转",
+      "pic": [
+        "testbucket",
+        "8_1481960600853.jpg"
+      ],
+      "multiple": [
+        3,
+        3,
+        3
+      ],
+      "status": [
+        {
+          "status-id": 1,
+          "duration": 8
+        },
+        {
+          "status-id": 2,
+          "duration": 40
+        },
+        {
+          "status-id": 3,
+          "duration": 20
+        },
+        {
+          "status-id": 4,
+          "duration": 10
+        }
+      ]
+    },
+    {
+      "tag": "TaxasPoker",
+      "title": "德州扑克",
+      "pic": [
+        "testbucket",
+        "8_1481960600853.jpg"
+      ],
+      "multiple": [
+        2,
+        22,
+        2
+      ],
+      "status": [
+        {
+          "status-id": 1,
+          "duration": 8
+        },
+        {
+          "status-id": 2,
+          "duration": 40
+        },
+        {
+          "status-id": 3,
+          "duration": 20
+        },
+        {
+          "status-id": 4,
+          "duration": 10
+        }
+      ]
+    }
+  ]
+}

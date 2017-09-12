@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>简易管理</title>
+</head>
+<body>
+<h3>游戏关闭/开启</h3>
+<form method="POST" target="_self" action="/live/freeze">
+    <input style="display:none" value="KeyboardMan" name="DoorKey">
+    <label>操作:</label><input type="radio" name="frz">关闭<input type="radio" name="frz">开启    <br/>
+    <label>游戏列表:</label><input type="text" width="30px" placeholder="多个游戏使用,分割"><br/>
+    <button type="submit">提交</button>
+</form>
+<hr/>
+
+<h3>设置app版本信息</h3>
+<form method="POST" target="_self" action="/operation/appver/set">
+    <input style="display:none" value="KeyboardMan" name="DoorKey">
+    <table>
+        <tr><td><label>当前版本代码:</label></td><td><input type="number" name="cvc"></td></tr>
+        <tr><td><label>当前版本说明:</label></td><td><input type="text" name="cvi"></td></tr>
+        <tr><td><label>当前版本字符串:</label></td><td><input type="text" name="cvs"></td></tr>
+        <tr><td><label>最低版本需求:</label></td><td><input type="number" name="mvr"></td></tr>
+        <tr><td><label>当前版本下载地址:</label></td><td><input type="text" name="dl"></td></tr>
+    </table>
+    <button type="submit">提交</button>
+</form>
+<hr/>
+
+<h3>获取app版本信息</h3>
+<form method="POST" target="_self" action="/operation/appver/get">
+    <input style="display:none" value="KeyboardMan" name="DoorKey">
+    <button type="submit">提交</button>
+</form>
+<hr/>
+
+<h3>设置商品信息</h3>
+<form>
+    <input style="display:none" value="KeyboardMan" name="DoorKey">
+    <table>
+        <tr><td><label>版本:</label></td><td><input type="number" name="ver"></td></tr>
+        <tr><td><label>内容:</label></td><td><textarea style="width:600px;height:200px">    [
+    {
+      "id": 0,
+      "rmb": 600,
+      "extra": 0,
+      "num": 60,
+      "info": "60个金币"
+    },
+    {
+      "id": 1,
+      "rmb": 3000,
+      "extra": 1,
+      "num": 300,
+      "info": "300个金币"
+    },
+    {
+      "id": 2,
+      "rmb": 9800,
+      "extra": 0,
+      "num": 980,
+      "info": "980个金币"
+    },
+    {
+      "id": 3,
+      "rmb": 59800,
+      "extra": 0,
+      "num": 5980,
+      "info": "5980个金币"
+    },
+    {
+      "id": 4,
+      "rmb": 159800,
+      "extra": 10,
+      "num": 15980,
+      "info": "15980个金币"
+    },
+    {
+      "id":5,
+      "rmb": 359800,
+      "extra": 100,
+      "num": 35980,
+      "info": "35980个金币"
+    }
+  ]</textarea></td></tr>
+    </table>
+    <button type="submit">敬请期待</button>
+</form>
+</body>
+</html>

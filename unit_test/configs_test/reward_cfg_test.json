@@ -1,0 +1,49 @@
+{
+  "credits config": [
+    {
+      "level": 1,
+      "credits need": 100,
+      "reward": {
+        "FreeMoney": 1000
+      }
+    }
+  ],
+  "login reward config": [
+    {
+      "day": 1,
+      "reward": {
+        "FreeMoney": 10
+      }
+    },
+    {
+      "day": 2,
+      "reward": {
+        "FreeMoney": 20
+      }
+    },
+    {
+      "day": 3,
+      "reward": {
+        "FreeMoney": 30
+      }
+    },
+    {
+      "day": 4,
+      "reward": {
+        "FreeMoney": 40
+      }
+    },
+    {
+      "day": 5,
+      "reward": {
+        "FreeMoney": 50
+      }
+    },
+    {
+      "day": 6,
+      "reward": {
+        "FreeMoney": 60
+      }
+    }
+  ]
+}

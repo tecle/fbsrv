@@ -1,0 +1,58 @@
+{
+  "PlayGame": [
+    {
+      "count": 1,
+      "reward": {
+        "FreeMoney": 10
+      }
+    }
+  ],
+  "ShareLive": [
+    {
+      "count": 1,
+      "reward": {
+        "FreeMoney": 20
+      }
+    }
+  ],
+  "WinGame": [
+    {
+      "count": 1,
+      "reward": {
+        "FreeMoney": 10
+      }
+    },
+    {
+      "count": 3,
+      "reward": {
+        "FreeMoney": 20
+      }
+    },
+    {
+      "count": 10,
+      "reward": {
+        "FreeMoney": 230
+      }
+    }
+  ],
+  "RewardSomeone": [
+    {
+      "count": 1,
+      "reward": {
+        "FreeMoney": 10
+      }
+    },
+    {
+      "count": 3,
+      "reward": {
+        "FreeMoney": 20
+      }
+    },
+    {
+      "count": 10,
+      "reward": {
+        "FreeMoney": 30
+      }
+    }
+  ]
+}

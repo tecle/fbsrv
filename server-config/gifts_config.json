@@ -1,0 +1,133 @@
+{
+  "ver": 0,
+  "gifts": [
+    {
+      "speRes": "X:Y",
+      "picRes": "X:Y",
+      "title": "糖果甜心",
+      "cost": 10,
+      "doSpe": false,
+      "id": 1
+    },
+    {
+      "speRes": "X:Y",
+      "picRes": "X:Y",
+      "title": "蓝色妖姬",
+      "cost": 52,
+      "doSpe": false,
+      "id": 2
+    },
+    {
+      "speRes": "X:Y",
+      "picRes": "X:Y",
+      "title": "好运连连",
+      "cost": 66,
+      "doSpe": false,
+      "id": 3
+    },
+    {
+      "speRes": "X:Y",
+      "picRes": "X:Y",
+      "title": "么么哒",
+      "cost": 520,
+      "doSpe": false,
+      "id": 4
+    },
+    {
+      "speRes": "X:Y",
+      "picRes": "X:Y",
+      "title": "干杯",
+      "cost": 1314,
+      "doSpe": false,
+      "id": 5
+    },
+    {
+      "speRes": "X:Y",
+      "picRes": "X:Y",
+      "title": "包治百病",
+      "cost": 9999,
+      "doSpe": false,
+      "id": 6
+    },
+    {
+      "speRes": "X:Y",
+      "picRes": "X:Y",
+      "title": "限量超跑",
+      "cost": 66666,
+      "doSpe": false,
+      "id": 7
+    },
+    {
+      "speRes": "X:Y",
+      "picRes": "X:Y",
+      "title": "公主城堡",
+      "cost": 99999,
+      "doSpe": false,
+      "id": 8
+    },
+    {
+      "speRes": "X:Y",
+      "picRes": "X:Y",
+      "title": "爽口小黄瓜",
+      "cost": 10,
+      "doSpe": false,
+      "id": 9
+    },
+    {
+      "speRes": "X:Y",
+      "picRes": "X:Y",
+      "title": "天降红包",
+      "cost": 52,
+      "doSpe": false,
+      "id": 10
+    },
+    {
+      "speRes": "X:Y",
+      "picRes": "X:Y",
+      "title": "666",
+      "cost": 66,
+      "doSpe": false,
+      "id": 11
+    },
+    {
+      "speRes": "X:Y",
+      "picRes": "X:Y",
+      "title": "我爱你",
+      "cost": 520,
+      "doSpe": false,
+      "id": 12
+    },
+    {
+      "speRes": "X:Y",
+      "picRes": "X:Y",
+      "title": "水晶鞋",
+      "cost": 1314,
+      "doSpe": false,
+      "id": 13
+    },
+    {
+      "speRes": "X:Y",
+      "picRes": "X:Y",
+      "title": "漫天烟花",
+      "cost": 9999,
+      "doSpe": false,
+      "id": 14
+    },
+    {
+      "speRes": "X:Y",
+      "picRes": "X:Y",
+      "title": "极速机车",
+      "cost": 66666,
+      "doSpe": false,
+      "id": 15
+    },
+    {
+      "speRes": "X:Y",
+      "picRes": "X:Y",
+      "title": "带你去旅行",
+      "cost": 99999,
+      "doSpe": false,
+      "id": 16
+    }
+  ]
+}
