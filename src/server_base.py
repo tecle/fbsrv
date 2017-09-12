@@ -46,7 +46,7 @@ class ServerBase(object):
 
     def init_async_http_client(self):
         # set max clients for async http client.
-        tornado.httpclient.AsyncHTTPClient(max_clients=self.server_cfg.common.max_async_clients)
+        tornado.httpclient.AsyncHTTPClient(max_clients=int(self.server_cfg.common.max_async_client))
 
     def start_server(self):
         self.init_app()
@@ -68,7 +68,6 @@ class ServerBase(object):
         cfg_dir = os.path.split(self.fp_cfg)[0]
         self.server_cfg.set_config_component('mysql', Configs.MysqlConfig())
         self.server_cfg.set_config_component('redis', Configs.RedisConfig())
-        self.server_cfg.set_config_component('common', Configs.CommonConfig())
         self.server_cfg.set_config_component('credits', Configs.UserCreditsConfig())
         self.server_cfg.set_config_component('business', Configs.BusinessConfig(cfg_dir))
         self.server_cfg.set_config_component('qiniu', Configs.QiniuConfig())
@@ -169,21 +168,6 @@ class ServerBase(object):
         from utils.rpcfrmwrk import RpcClient
         return RpcClient('{}/exp/rpc/game'.format(self.server_cfg.living.game.rpc_host))
 
-    def get_async_db(self):
-        from thirdsupport.async_db_client import AsyncDBClient
-        ary = self.server_cfg.common.db_layer_host.split(':')
-        if ary[0] == '127.0.0.1' and len(ary) > 1 and ary[1] == str(self.port):
-            logging.info('[YES] db server is self, not check.')
-            return AsyncDBClient(self.server_cfg.common.db_layer_host)
-        adb = AsyncDBClient(self.server_cfg.common.db_layer_host)
-        sr = adb.check_db_server()
-        if sr < 0.5:
-            logging.fatal('[NO] Invalid db server. info:[stable rate:{}%].'.format(sr * 100))
-            raise Exception('check db server failed.')
-        else:
-            logging.info('[YES] db server status ok. info:[stable rate:{}%]'.format(sr * 100))
-        return adb
-
     def get_async_im(self):
         from thirdsupport.yunxin import YunXinAPI
         return YunXinAPI(self.server_cfg.yx.app_key, self.server_cfg.yx.app_secret,
@@ -207,9 +191,6 @@ class ServerBase(object):
     def get_secure_tools(self):
         from utils.util_tools import SecureTool
         secret = self.server_cfg.common.pay_secret
-        if not secret:
-            logging.fatal('not set common.pay_secret in config file.')
-            exit(1)
         return SecureTool(secret)
 
     def get_qiniu_api(self):

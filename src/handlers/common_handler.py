@@ -1,16 +1,17 @@
 # coding: utf-8
 
-import datetime
-import logging
 import os
 import time
-
-from model.cache import UserInfoCache
-
+import logging
+import datetime
+import tornado.gen
 import celeryapp.tasks as CeleryTasks
-from handlers.base_handler import KVBaseHandler
+
+
+from handlers.base_handler import KVBaseHandler, CoroutineBaseHandler
 from model.cache.server_cache import ServerCache
 from model.response import Status, HobbyList, RecommendUsers, QiNiuUploadData, QiNiuDownloadData, DataShell
+from model.cache import UserInfoCache
 from utils.common_define import ErrorCode, HttpErrorStatus
 from utils.util_tools import validate_position_pair
 
@@ -111,27 +112,6 @@ class GetHobby(GetAllHobbiesHandle):
         items = self.application.redis_wrapper.get_cache(ServerCache.cache_name).get_hobby(size)
         for item in items:
             result.data.append(item)
-        self.write_response(result)
-        self.finish()
-
-
-class GetRecommendUsersHandler(KVBaseHandler):
-    SEX_STRINGS = ['1', '0', None]
-
-    def do_post(self):
-        self.application.async_db.get_recommend_user(self.request.body, self.on_finish_get_recommend_user)
-
-    def on_finish_get_recommend_user(self, resp):
-        result = RecommendUsers()
-        if not resp.error:
-            result.ParseFromString(resp.body)
-            result.success = True
-            self.application.redis_wrapper.get_cache(UserInfoCache.cache_name).get_recommend_users(result)
-            for user in result.users:
-                user.avatar = self.application.qiniu_api.get_pub_url(user.avatar)
-        else:
-            result.success = False
-            result.code = ErrorCode.ServerError
         self.write_response(result)
         self.finish()
 

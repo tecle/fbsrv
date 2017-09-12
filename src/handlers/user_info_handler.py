@@ -12,7 +12,6 @@ from model.response import Status
 from model.response import Strings
 from model.response import UserDetail
 from model.response import UserVisitors
-from model.response import UsersMetaInfo
 from utils.common_define import ErrorCode, HttpErrorStatus
 from utils.repoze.lru import ExpiringLRUCache
 from utils.util_tools import make_force_offline_msg
@@ -30,9 +29,10 @@ class GetUserLocationHandler(KVBaseHandler):
         self.finish()
 
 
-class GetUserInfoHandler(KVBaseHandler):
+class GetUserInfoHandler(CoroutineBaseHandler):
     users_cache = ExpiringLRUCache(1000, 60)
 
+    @tornado.gen.coroutine
     def do_post(self):
         ids = self.get_argument('users').strip()
         id_list = ids.split(',')
@@ -40,32 +40,8 @@ class GetUserInfoHandler(KVBaseHandler):
             self.set_status(*HttpErrorStatus.WrongParams)
             self.finish()
             return
-        result = UsersMetaInfo()
-        user_for_db = self.application.get_cache(UserInfoCache.cache_name).get_users_meta_info(id_list, result)
-
-        if user_for_db:
-            self.application.async_db.get_user_info_by_list(
-                [str(i) for i in user_for_db.keys()], partial(self.on_finish_get_user_info, result, user_for_db))
-        else:
-            self.write_response(result)
-            self.finish()
-
-    def on_finish_get_user_info(self, result, user_for_db, resp):
-        if not resp.error and resp.body:
-            db_res = UsersMetaInfo()
-            db_res.ParseFromString(resp.body)
-            for usr in db_res.users:
-                u = user_for_db[usr.id]
-                u.avatar = self.application.qiniu_api.get_pub_url(usr.avatar)
-                usr.avatar = u.avatar
-                u.nickName = usr.nickName
-                u.isMale = usr.isMale
-                u.signature = usr.signature
-            self.application.get_cache(UserInfoCache.cache_name).update_users_info(db_res)
-        else:
-            logging.warning('get user meta info from db failed:[%s]' % resp.body)
+        result = yield self.application.user_center.get_users_meta(id_list)
         self.write_response(result)
-        self.finish()
 
 
 class GetUsersDetailHandler(CoroutineBaseHandler):
@@ -93,35 +69,29 @@ class GetUsersDetailHandler(CoroutineBaseHandler):
         self.finish()
 
 
-class GetUserDetailHandler(KVBaseHandler):
+class GetUserDetailHandler(CoroutineBaseHandler):
+    @tornado.gen.coroutine
     def do_post(self):
         user_id = int(self.get_argument('uid'))
         owner_id = int(self.get_argument('oid'))
-        user_detail_pb = self.application.user_detail_cache.get(owner_id)
-        cur_gold = self.visit_event(owner_id, user_id)
-        if user_detail_pb:
-            user_detail_pb.gold = cur_gold
-            self.write_response(user_detail_pb)
-            self.finish()
-        else:
-            self.application.async_db.get_user_detail(
-                owner_id, partial(self.on_finish_get_user_detail, user_id, cur_gold))
-
-    def on_finish_get_user_detail(self, uid, cur_gold, resp):
-        if not resp.error and resp.body:
-            user_detail_pb = UserDetail()
-            user_detail_pb.ParseFromString(resp.body)
-            # return avatar
-            user_detail_pb.avatar = self.application.qiniu_api.get_pub_url(user_detail_pb.avatar)
-            user_detail_pb.pics = self.application.qiniu_api.get_pub_urls(user_detail_pb.raw_pics)
-            user_detail_pb.isAnchor, user_detail_pb.isLiving, user_detail_pb.location = \
-                self.application.redis_wrapper.get_cache(UserInfoCache.cache_name).user_live_status(uid)
-            user_detail_pb.gold = cur_gold
-            self.application.user_detail_cache.put(user_detail_pb.id, user_detail_pb)
-            self.write_response(user_detail_pb)
+        user = yield self.application.user_center.get_user(user_id)
+        result = UserDetail()
+        if user:
+            result.id = user.user_id
+            result.avatar = user.avatar
+            result.nickName = user.nick_name
+            result.sign = user.signature
+            result.gender = user.gender
+            result.born = user.born
+            result.hobbies = user.hobbies
+            result.pics = user.show_pics
+            result.location = user.location
+            _, result.isLiving, _ = \
+                self.application.get_cache(UserInfoCache.cache_name).user_live_status(user_id)
+            result.gold = self.visit_event(owner_id, user_id)
+            self.write_response(result)
         else:
             self.set_status(*HttpErrorStatus.TargetNotExist)
-        self.finish()
 
     def visit_event(self, owner_id, visitor_id):
         uif_cache = self.application.redis_wrapper.get_cache(UserInfoCache.cache_name)
@@ -192,20 +162,18 @@ class ModifyUser(CoroutineBaseHandler):
         self.finish()
 
 
-class SelectHobby(KVBaseHandler):
+class SelectHobby(CoroutineBaseHandler):
+    @tornado.gen.coroutine
     def do_post(self):
         '''hobbies is merge through: bobby1 ^ hobby2 ^ hobby3...'''
         uid = self.get_argument("uid")
         hb_list = self.get_argument('hobbies')
-        self.application.async_db.add_hobby_to_user(uid, hb_list, self.on_finish_add_hobby)
-
-    def on_finish_add_hobby(self, resp):
+        success = yield self.application.user_center.update_user(uid, hobbies=hb_list)
         ret = Status()
-        if resp.error or resp.body != 'OK':
+        if not success:
             ret.success = False
             ret.code = ErrorCode.ServerError
         self.write_response(ret)
-        self.finish()
 
 
 class ResetPasswordHandler(CoroutineBaseHandler):
@@ -247,3 +215,19 @@ class GetUserGoldHandler(KVBaseHandler):
         ret.data = gold
         self.write_response(ret)
         self.finish()
+
+
+class GetRecommendUsersHandler(CoroutineBaseHandler):
+    SEX_STRINGS = ['1', '0', None]
+
+    @tornado.gen.coroutine
+    def do_post(self):
+        offset = int(self.get_argument("start"))
+        size = int(self.get_argument("size"))
+        uid = self.get_argument("uid")
+        sex = self.get_argument("sex", None)
+        star = self.get_argument("star", None)
+
+        result = yield self.application.user_center.get_recommend_user(uid, offset, size, sex, star)
+        self.application.get_cache(UserInfoCache.cache_name).update_recommend_users_data(result)
+        self.write_response(result)

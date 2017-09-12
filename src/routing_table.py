@@ -52,7 +52,7 @@ ROUTING_TABLE = [
     (r"/user/sites", UserInfoHandelers.GetUserLocationHandler, check_token_dict),
     (r"/user/gold", UserInfoHandelers.GetUserGoldHandler, check_token_dict),
 
-    (r"/discovery/users", CommonHandlers.GetRecommendUsersHandler, uncheck_token_dict),
+    (r"/discovery/users", UserInfoHandelers.GetRecommendUsersHandler, uncheck_token_dict),
 
     (r'/heartbeat/report', CommonHandlers.ReportHeartbeatHandler, check_token_dict),
 ]
@@ -94,18 +94,4 @@ PAY_TABLE = [
     (r'/pay/do', pay_handlers.PayHandler, check_token_dict),
     (r'/pay/his', pay_handlers.OrdersHandler, check_token_dict),
     (r'/pay/cargo', CommonHandlers.GetCargoConfHandler, check_token_dict)
-]
-
-import handlers.db_handler as db_handler
-
-DB_TABLE = [
-    (r'/db/user/addhobby', db_handler.UpdateUserHobbyToDBHandler),
-    (r'/db/user/detail', db_handler.GetUserDetailFromDBHandler),
-    (r'/db/user/getsome', db_handler.GetUserInfoFromDBHandler),
-    (r'/db/user/recommend', db_handler.GetRecommendUserFromDBHandler),
-    (r'/db/user/avatar', db_handler.GetUsersAvatarHandler),
-    (r'/db/hello', db_handler.HelloServiceHandler),
-    (r'/db/wx/new', db_handler.CreateUserByWxHandler),
-    (r'/db/wx/login', db_handler.LoginByWxHandler),
-    (r'/db/wx/update', db_handler.UpdateTokenByWxHandler)
 ]

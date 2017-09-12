@@ -1,6 +1,6 @@
 # coding: utf-8
 import json
-
+import datetime
 from data_defines import BaseData, ListWrapper
 
 
@@ -210,18 +210,15 @@ class UsersMetaInfo(BaseData):
 class UserDetail(BaseData):
     def __init__(self):
         self.id = None
-        self.avatar = ''
-        self.nickName = ''
-        self.sign = ''
-        self.isMale = True
-        self.born = ''
-        self.star = 0
-        self.hobbies = []
-        self.pics = ''
-        self.location = ''
-        self.isAnchor = False
-        self.isLiving = False
-        self.raw_pics = None
+        self.avatar = None
+        self.nickName = None
+        self.sign = None
+        self.gender = None
+        self.born = None
+        self.hobbies = None
+        self.pics = None
+        self.location = None
+        self.isLiving = None
         self.gold = 0
         super(UserDetail, self).__init__()
 
@@ -231,33 +228,13 @@ class UserDetail(BaseData):
             'at': self.avatar,
             'nik': self.nickName,
             'sn': self.sign,
-            'sex': 1 if self.isMale else 0,
-            'brt': self.born,
-            'star': self.star,
+            'sex': self.gender,
+            'brt': self.born.strftime('%Y-%m-%d') if isinstance(self.born, datetime.date) else self.born,
             'hby': self.hobbies,
             'pics': self.pics,
-            'raw_pics': self.raw_pics,
             'loc': self.location,
-            'ach': self.isAnchor,
-            'lvn': self.isLiving,
             'gd': self.gold
         }
-
-    def InitByJsonBody(self, json_obj):
-        self.id = json_obj['id']
-        self.avatar = json_obj['at']
-        self.nickName = json_obj['nik']
-        self.sign = json_obj['sn']
-        self.isMale = json_obj['sex'] > 0
-        self.born = json_obj['brt']
-        self.star = json_obj['star']
-        self.hobbies = json_obj['hby']
-        self.pics = json_obj['pics']
-        self.raw_pics = json_obj['raw_pics']
-        self.location = json_obj['loc']
-        self.isAnchor = json_obj['ach']
-        self.isLiving = json_obj['lvn']
-        self.gold = json_obj['gd']
 
 
 class UserVisitors(BaseData):

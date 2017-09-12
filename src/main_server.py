@@ -20,7 +20,6 @@ server_mapping = {
     'op': servers.OperationServer,
     'pay': servers.PayServer,
     'live': servers.LiveServer,
-    'db': servers.DatabaseServer,
     'game': servers.GameLogicServer,
     'gate': servers.LiveServer
 }

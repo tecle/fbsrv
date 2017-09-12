@@ -8,6 +8,7 @@ import tornado.gen
 from model.cache.cache_define import RedisStr
 from model.cache.cache_tools import atoi
 from model.user_info import UserInfo
+from model.response import RecommendUsers, UsersMetaInfo
 from utils.util_tools import get_star, make_key
 
 
@@ -118,6 +119,19 @@ class UserCenter(object):
         raise tornado.gen.Return(success)
 
     @tornado.gen.coroutine
+    def get_recommend_user(self, user_id, start, size, sex_wanted=None, star_wanted=None):
+        result = RecommendUsers()
+        yield tornado.gen.Task(
+            UserInfo.get_recommend_users, result, user_id, start, size, gender=sex_wanted, star=star_wanted)
+        raise tornado.gen.Return(result)
+
+    @tornado.gen.coroutine
+    def get_users_meta(self, id_list):
+        users = UsersMetaInfo()
+        yield tornado.gen.Task(UserInfo.get_users_pb_info, id_list, users)
+        raise tornado.gen.Return(users)
+
+    @tornado.gen.coroutine
     def get_users(self, uid_list, ensure_order=True):
         '''
         :param uid_list: ["1", "2"]
@@ -167,9 +181,9 @@ class UserCenter(object):
             avatar=cached_data[2],
             signature=cached_data[1],
             nick_name=cached_data[0],
-            gender=cached_data[3],
+            gender=atoi(cached_data[3]),
             born=cached_data[4],
-            hobbies=cached_data[5],
+            hobbies=atoi(cached_data[5]),
             show_pics=cached_data[6]
         )
 

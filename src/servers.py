@@ -75,7 +75,6 @@ class LogicServer(ServerBase):
         self.app.qiniu_api = self.get_qiniu_api()
         self.app.secure_tools = self.get_secure_tools()
         self.app.db_conn = self.get_db_conn()
-        self.app.async_db = self.get_async_db()
         self.app.async_live = self.get_async_live()
         self.app.tecent_access_tool = self.get_tecent_access_tool()
 
@@ -136,23 +135,6 @@ class PayServer(ServerBase):
         self.app.growth_system = self.get_growth_system()
         self.app.async_im = self.get_async_im()
         self.init_db_conn_pool()
-
-
-class DatabaseServer(ServerBase):
-    def init_app(self):
-        self.init_db_conn_pool()
-        self.app = CommonApplication(DB_TABLE)
-        self.app.db_conn = self.get_db_conn()
-
-    def init_async_http_client(self):
-        pass
-
-    def parse_server_conf(self, path):
-        import configs.config_wrapper
-        self.server_cfg.set_config_component('mysql', configs.config_wrapper.MysqlConfig())
-        if not self.server_cfg.parse(path):
-            print ("Parse config file [%s] failed." % self.COMMON_CONFIG_FILE)
-            exit(1)
 
 
 class OperationServer(ServerBase):

@@ -4,6 +4,8 @@ import logging
 
 
 class ConfigObject(object):
+    _null = object()
+
     def __repr__(self):
         out = []
         for attr in dir(self):
@@ -14,6 +16,12 @@ class ConfigObject(object):
                 else:
                     out.append('{}={}'.format(attr, attr_val))
         return '\n'.join(out)
+
+    def get(self, key, default=_null):
+        attr = getattr(self, key, default=default)
+        if attr == self._null:
+            raise ValueError('%s not exist.' % key)
+        return attr
 
 
 class QiniuConfig(object):
@@ -84,23 +92,6 @@ class BusinessConfig(object):
             raise Exception('Parse json config failed.')
         daily_config_path = os.path.join(self.conf_dir, kv_map['business.daily_task_config_file'])
         self.daily_task_config.parse_from_json_file(daily_config_path)
-
-
-class CommonConfig(object):
-    def __init__(self):
-        self.db_layer_host = None
-        self.server_mode = None
-        self.max_async_clients = None
-        self.pay_secret = None
-
-    def parse(self, kv_map):
-        logging.info('Begin parse common config...')
-        self.db_layer_host = kv_map['common.db_layer.host']
-        self.server_mode = kv_map['common.server.mode']
-        if self.server_mode not in ['debug', 'db']:
-            raise Exception('Invalid server mode. Expect:debug|db')
-        self.max_async_clients = int(kv_map['common.max_async_client'])
-        self.pay_secret = kv_map.get('common.pay_secret', None)
 
 
 class MysqlConfig(object):

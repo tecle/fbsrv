@@ -232,25 +232,15 @@ class UserInfoCache(ExtendedCache):
         res = p.execute()
         return atoi(res[0], 1)
 
-    def get_recommend_users(self, recommend_user_pb):
+    def update_recommend_users_data(self, recommend_user_pb):
         p = self.r.pipeline()
-        fields = (
-            RedisStr.UserVipLevelField,
-            RedisStr.UserLatitudeField,
-            RedisStr.UserLongitudeField,
-            RedisStr.UserLocationField
-        )
         for usr in recommend_user_pb.users:
-            p.hmget(RedisStr.UserHKeyPtn % usr.userId, fields)
+            p.hget(RedisStr.UserHKeyPtn % usr.userId, RedisStr.UserVipLevelField)
             p.sismember(RedisStr.LivingListSKey, usr.userId)
         ret = p.execute()
         for i, u in enumerate(recommend_user_pb.users):
             idx = i << 1
-            item = ret[idx]
-            u.vipLevel = atoi(item[0], 1)
-            u.latitude = atof(item[1])
-            u.longitude = atof(item[2])
-            u.site = item[3] or ''
+            u.vipLevel = atoi(ret[idx], 1)
             u.status = 1 if ret[idx + 1] else 0
 
     def user_has_live_room(self, uid):

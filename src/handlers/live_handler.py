@@ -2,12 +2,11 @@
 
 import logging
 import time
-
 import tornado.gen
 import tornado.httpclient
 import tornado.web
-from model.response.coredata import Status
 
+from model.response.coredata import Status
 from handlers.base_handler import KVBaseHandler, CoroutineBaseHandler
 from model.cache import LiveCache
 from model.response.livedata import CurrentLiving, CreateLiveResult, LiveDetail, RankData

@@ -21,7 +21,6 @@ class CommonApplication(tornado.web.Application):
         self.redis_wrapper = None
         self.db_conn = None
 
-        self.async_db = None
         self.async_im = None
         self.async_live = None
 

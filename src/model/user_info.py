@@ -172,7 +172,7 @@ class UserInfo(TableBase):
         id_list = random.sample(uid_list, min(size, len(uid_list)))
 
         if id_list:
-            query = 'select user_id,gender,born,nick_name,signature,avatar,star ' \
+            query = 'select user_id,gender,born,nick_name,signature,avatar,star,location ' \
                     'from {} where user_id in ({})'.format(cls.__table_name__, ','.join(id_list))
             ret = conn.query(query)
             for obj in ret:
@@ -184,6 +184,7 @@ class UserInfo(TableBase):
                 item.nickname = obj['nick_name']
                 item.avatar = obj['avatar']
                 item.star = obj['star']
+                item.site = obj['location']
 
     @classmethod
     @run_on_executor(executor='_thread_pool', io_loop='_io_loop')
